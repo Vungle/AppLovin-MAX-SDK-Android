@@ -1,5 +1,15 @@
 # Changelog
 
+## 21.8.3.2
+* Use local scope copy of native ad while preparing view.
+* Update privacy settings before collecting signal.
+
+## 21.8.3.1
+* Add support for returning the main image asset in `MaxNativeAd` for native ads.
+
+## 21.8.3.0
+* Certified with Smaato SDK 21.8.3.
+
 ## 21.8.2.1
 * Update ad display failed error code.
 

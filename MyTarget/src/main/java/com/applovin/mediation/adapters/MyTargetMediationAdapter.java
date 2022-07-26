@@ -139,6 +139,8 @@ public class MyTargetMediationAdapter
     {
         log( "Collecting signal..." );
 
+        updatePrivacyStates( parameters );
+
         // Must be ran on bg thread
         String signal = MyTargetManager.getBidderToken( getContext( activity ) );
         callback.onSignalCollected( signal );
@@ -279,7 +281,7 @@ public class MyTargetMediationAdapter
 
     //region Helper Functions
 
-    private void updatePrivacyStates(final MaxAdapterResponseParameters parameters)
+    private void updatePrivacyStates(final MaxAdapterParameters parameters)
     {
         // NOTE: Adapter / mediated SDK has support for COPPA, but is not approved by Play Store and therefore will be filtered on COPPA traffic
         // https://support.google.com/googleplay/android-developer/answer/9283445?hl=eno
@@ -552,18 +554,31 @@ public class MyTargetMediationAdapter
             }
 
             final ImageData icon = nativeBanner.getIcon();
+            final ImageData mainImageData = nativeBanner.getImage();
             final MediaAdView mediaView = NativeViewsFactory.getMediaAdView( context );
 
-            MaxNativeAd.MaxNativeAdImage maxNativeAdImage = null;
+            MaxNativeAd.MaxNativeAdImage iconImage = null;
+            MaxNativeAd.MaxNativeAdImage mainImage = null;
             if ( icon != null )
             {
                 if ( icon.getBitmap() != null )
                 {
-                    maxNativeAdImage = new MaxNativeAd.MaxNativeAdImage( new BitmapDrawable( context.getResources(), icon.getBitmap() ) );
+                    iconImage = new MaxNativeAd.MaxNativeAdImage( new BitmapDrawable( context.getResources(), icon.getBitmap() ) );
                 }
                 else
                 {
-                    maxNativeAdImage = new MaxNativeAd.MaxNativeAdImage( Uri.parse( icon.getUrl() ) );
+                    iconImage = new MaxNativeAd.MaxNativeAdImage( Uri.parse( icon.getUrl() ) );
+                }
+            }
+            if ( mainImageData != null )
+            {
+                if ( mainImageData.getBitmap() != null )
+                {
+                    mainImage = new MaxNativeAd.MaxNativeAdImage( new BitmapDrawable( context.getResources(), mainImageData.getBitmap() ) );
+                }
+                else
+                {
+                    mainImage = new MaxNativeAd.MaxNativeAdImage( Uri.parse( mainImageData.getUrl() ) );
                 }
             }
 
@@ -575,9 +590,14 @@ public class MyTargetMediationAdapter
                     .setTitle( nativeBanner.getTitle() )
                     .setBody( nativeBanner.getDescription() )
                     .setCallToAction( nativeBanner.getCtaText() )
-                    .setIcon( maxNativeAdImage )
+                    .setIcon( iconImage )
                     .setMediaView( mediaView )
                     .setAdvertiser( nativeBanner.getAdvertisingLabel() );
+
+            if ( AppLovinSdk.VERSION_CODE >= 11_04_03_99 )
+            {
+                builder.setMainImage( mainImage );
+            }
 
             if ( AppLovinSdk.VERSION_CODE >= 11_04_00_00 )
             {

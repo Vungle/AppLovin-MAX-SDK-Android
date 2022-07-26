@@ -1,5 +1,24 @@
 # Changelog
 
+## 16.1.81.0
+* Certified with Mintegral SDK 16.1.81.
+
+## 16.1.71.0
+* Certified with Mintegral SDK 16.1.71.
+* Use local scope copy of native ad while preparing view.
+
+## 16.1.61.0
+* Certified with Mintegral SDK 16.1.61.
+
+## 16.1.51.1
+* Add support for returning the main image asset in `MaxNativeAd` for native ads.
+
+## 16.1.51.0
+* Certified with Mintegral SDK 16.1.51.
+
+## 16.1.41.0
+* Certified with Mintegral SDK 16.1.41.
+
 ## 16.1.11.3
 * Unity: add `androidx.recyclerview:recyclerview` dependency.
 

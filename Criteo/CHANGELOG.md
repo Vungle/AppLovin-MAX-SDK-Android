@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.6.1.0
+* Certified with Criteo SDK 4.6.1.
+
+## 4.6.0.6
+* Remove unnecessary privacy settings update during signal collection.
+* Use local scope copy of native ad while preparing view.
+* Add check to only invoke ad load APIs if SDK has been initialized.
+
 ## 4.6.0.5
 * Update ad display failed error code.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.3.0
+* Certified with HyprMX SDK 6.0.3.
+
+## 6.0.2.2
+* Add support to set `hasUserConsent` and `ageRestrictedUser` on initialization.
+
 ## 6.0.2.1
 * Update ad display failed error code.
 

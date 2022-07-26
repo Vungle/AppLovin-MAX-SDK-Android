@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.0.0.11
+* Update privacy settings before collecting signal.
+
+## 2.0.0.10
+* Explicitly set native activity's ActivityState to `RESUMED`.
+
+## 2.0.0.9
+* Add support for passing an Activity to Yahoo's SDK for native ad view impression tracking.
+* Use local scope copy of native ad while preparing view.
+
+## 2.0.0.8
+* Fix native media content sizing issue.
+
+## 2.0.0.7
+* Add support for passing local parameter "is_location_collection_enabled" to set `YASAds.setLocationAccessMode(...)`.
+
+## 2.0.0.6
+* Add support for returning the main image asset in `MaxNativeAd` for native ads.
+
+## 2.0.0.5
+* Add support for IAB's TCFv2 GDPR consent string. Note that you must be on the AppLovin MAX SDK v11.4.3+ and use a TCFv2-compliant framework which stores the consent string in SharedPreferences via the `IABTCF_TCString` key to use this feature.
+
 ## 2.0.0.4
 * Add support for preparing video, image and icon components.
 * Do not explicitly destroy Yahoo native ads, as it will clear previously-registered `TextView`s and `Buttons`.
@@ -26,7 +48,7 @@
 * Update ad display failed error code.
 
 ## 1.14.0.10
-* Add support for tracking impressions for all ad formats
+* Add support for tracking impressions for all ad formats.
 
 ## 1.14.0.9
 * Add support for tracking banner ad impressions.

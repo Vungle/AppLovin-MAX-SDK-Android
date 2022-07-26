@@ -1,5 +1,15 @@
 # Changelog
 
+## 21.1.0.0
+* Certified with Google SDK 21.1.0.
+
+## 21.0.0.3
+* Add support for DV360 Bidding by updating the requester type (`requester_type_3`) and request agent (`applovin_dv360`).
+* Use local scope copy of native ad while preparing view.
+
+## 21.0.0.2
+* Add support for returning the main image asset in `MaxNativeAd` for native ads.
+
 ## 21.0.0.1
 * Fix interstitial ad display failed callback not being mapped correctly.
 

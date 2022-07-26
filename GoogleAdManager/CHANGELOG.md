@@ -1,5 +1,12 @@
 # Changelog
 
+## 21.1.0.0
+* Certified with GoogleAdManager SDK 21.1.0.
+* Use local scope copy of native ad while preparing view.
+
+## 21.0.0.2
+* Add support for returning the main image asset in `MaxNativeAd` for native ads.
+
 ## 21.0.0.1
 * Fix interstitial ad display failed callback not being mapped correctly.
 
