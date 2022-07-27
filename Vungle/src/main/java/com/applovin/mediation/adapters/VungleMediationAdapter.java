@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.MaxReward;
@@ -14,6 +16,7 @@ import com.applovin.mediation.adapter.MaxRewardedAdapter;
 import com.applovin.mediation.adapter.MaxSignalProvider;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
+import com.applovin.mediation.adapter.listeners.MaxNativeAdAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxSignalCollectionListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterInitializationParameters;
@@ -21,6 +24,7 @@ import com.applovin.mediation.adapter.parameters.MaxAdapterParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapter.parameters.MaxAdapterSignalCollectionParameters;
 import com.applovin.mediation.adapters.vungle.BuildConfig;
+import com.applovin.mediation.nativeAds.MaxNativeAd;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.applovin.sdk.AppLovinSdkUtils;
@@ -29,6 +33,9 @@ import com.vungle.warren.BannerAdConfig;
 import com.vungle.warren.Banners;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
+import com.vungle.warren.NativeAd;
+import com.vungle.warren.NativeAdLayout;
+import com.vungle.warren.NativeAdListener;
 import com.vungle.warren.PlayAdCallback;
 import com.vungle.warren.Plugin;
 import com.vungle.warren.Vungle;
@@ -36,8 +43,11 @@ import com.vungle.warren.VungleApiClient;
 import com.vungle.warren.VungleBanner;
 import com.vungle.warren.VungleSettings;
 import com.vungle.warren.error.VungleException;
+import com.vungle.warren.ui.view.MediaView;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VungleMediationAdapter
@@ -51,6 +61,73 @@ public class VungleMediationAdapter
 
     // Explicit default constructor declaration
     public VungleMediationAdapter(final AppLovinSdk sdk) { super( sdk ); }
+
+    @Override
+    public void loadNativeAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxNativeAdAdapterListener maxNativeAdAdapterListener) {
+
+        //assume as is loaded
+        final Bundle serverParameters = maxAdapterResponseParameters.getServerParameters();
+        final boolean isNativeBanner = serverParameters.getBoolean( "is_native_banner");
+        final String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+
+        NativeAd nativeAd = new NativeAd(activity, placementId);
+        MediaView mediaView = new MediaView(activity);
+        ImageView iconView = new ImageView(activity);
+        AdConfig adConfig = new AdConfig();
+        NativeAdLayout nativeAdLayout = new NativeAdLayout(activity);
+        nativeAd.loadAd(adConfig, new NativeAdListener() {
+            @Override
+            public void onNativeAdLoaded(NativeAd nativeAd) {
+                MaxNativeAd maxNativeAd = new MaxNativeAd.Builder()
+                        .setAdFormat(MaxAdFormat.NATIVE)
+                        .setTitle(nativeAd.getAdTitle())
+                        .setBody(nativeAd.getAdBodyText())
+                        .setMediaView(mediaView)
+                        .setIconView(iconView)
+                        .build();
+
+                List<View> clickableViews = new ArrayList<>();
+                clickableViews.add(maxNativeAd.getIconView());
+                clickableViews.add(maxNativeAd.getMediaView());
+                nativeAd.registerViewForInteraction(nativeAdLayout,
+                        mediaView,
+                        iconView,
+                        clickableViews);
+                maxNativeAdAdapterListener.onNativeAdLoaded(maxNativeAd, null);
+            }
+
+            @Override
+            public void onAdLoadError(String placementId, VungleException exception) {
+                maxNativeAdAdapterListener.onNativeAdLoadFailed(MaxAdapterError.NO_FILL);
+            }
+
+            @Override
+            public void onAdPlayError(String placementId, VungleException exception) {
+
+            }
+
+            @Override
+            public void onAdImpression(String placementId) {
+                maxNativeAdAdapterListener.onNativeAdDisplayed(null);
+            }
+
+            @Override
+            public void onAdClick(String placementId) {
+                maxNativeAdAdapterListener.onNativeAdClicked();
+            }
+
+            @Override
+            public void onAdLeftApplication(String placementId) {
+
+            }
+
+            @Override
+            public void creativeId(String creativeId) {
+
+            }
+        });
+
+    }
 
     @Override
     public void initialize(final MaxAdapterInitializationParameters parameters, final Activity activity, final OnCompletionListener onCompletionListener)
@@ -346,6 +423,8 @@ public class VungleMediationAdapter
     {
         String bidResponse = parameters.getBidResponse();
         boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
+        final boolean isNative = parameters.getServerParameters().getBoolean( "is_native" );
+
         final String adFormatLabel = adFormat.getLabel();
         String placementId = parameters.getThirdPartyAdPlacementId();
         log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + adFormatLabel + " ad for placement: " + placementId + "..." );
