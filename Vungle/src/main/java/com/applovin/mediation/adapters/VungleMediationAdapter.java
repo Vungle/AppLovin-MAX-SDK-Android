@@ -12,6 +12,7 @@ import com.applovin.mediation.MaxReward;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
+import com.applovin.mediation.adapter.MaxNativeAdAdapter;
 import com.applovin.mediation.adapter.MaxRewardedAdapter;
 import com.applovin.mediation.adapter.MaxSignalProvider;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
@@ -52,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VungleMediationAdapter
         extends MediationAdapterBase
-        implements MaxSignalProvider, MaxInterstitialAdapter, MaxRewardedAdapter, MaxAdViewAdapter
+        implements MaxSignalProvider, MaxInterstitialAdapter, MaxRewardedAdapter, MaxAdViewAdapter, MaxNativeAdAdapter
 {
     private static final AtomicBoolean        initialized = new AtomicBoolean();
     private static       InitializationStatus status;
