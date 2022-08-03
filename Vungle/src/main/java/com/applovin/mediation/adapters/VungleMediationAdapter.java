@@ -145,13 +145,6 @@ public class VungleMediationAdapter
 
             status = InitializationStatus.INITIALIZING;
 
-            // NOTE: Vungle's SDK will log error if setting COPPA state after it initializes
-            Boolean isAgeRestrictedUser = getPrivacySetting( "isAgeRestrictedUser", parameters );
-            if ( isAgeRestrictedUser != null )
-            {
-                Vungle.updateUserCoppaStatus( isAgeRestrictedUser );
-            }
-
             Plugin.addWrapperInfo( VungleApiClient.WrapperFramework.max, getAdapterVersion() );
 
             VungleSettings settings = new VungleSettings.Builder().disableBannerRefresh().build();
@@ -240,6 +233,7 @@ public class VungleMediationAdapter
         String bidResponse = parameters.getBidResponse();
         boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
         String placementId = parameters.getThirdPartyAdPlacementId();
+        Bundle serverParameters = parameters.getServerParameters();
         log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + "interstitial ad for placement: " + placementId + "..." );
 
         if ( !Vungle.isInitialized() )
@@ -427,7 +421,6 @@ public class VungleMediationAdapter
     {
         String bidResponse = parameters.getBidResponse();
         boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
-        final boolean isNative = parameters.getServerParameters().getBoolean( "is_native" );
 
         final String adFormatLabel = adFormat.getLabel();
         String placementId = parameters.getThirdPartyAdPlacementId();
@@ -593,6 +586,13 @@ public class VungleMediationAdapter
             config.setMuted( serverParameters.getBoolean( "is_muted" ) );
         }
 
+        if ( serverParameters.containsKey( "app_orientation" ) )
+        {
+            // 0 = PORTRAIT, 1 = LANDSCAPE, 2 = ALL/AUTO_ROTATE
+            int orientation = serverParameters.getInt( "app_orientation" );
+            config.setAdOrientation(orientation);
+        }
+
         return config;
     }
 
@@ -621,6 +621,12 @@ public class VungleMediationAdapter
                 Vungle.Consent ccpaStatus = isDoNotSell ? Vungle.Consent.OPTED_OUT : Vungle.Consent.OPTED_IN;
                 Vungle.updateCCPAStatus( ccpaStatus );
             }
+        }
+
+        Boolean isAgeRestrictedUser = getPrivacySetting( "isAgeRestrictedUser", parameters );
+        if ( isAgeRestrictedUser != null )
+        {
+            Vungle.updateUserCoppaStatus( isAgeRestrictedUser );
         }
     }
 
