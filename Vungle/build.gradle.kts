@@ -29,7 +29,6 @@ dependencies {
 
 //    implementation("com.vungle:publisher-sdk-android:6.11.0")
 
-    //TODO: Replace this with maven repo as above when available
-    implementation("com.github.Vungle:vungle-android-sdk:6.12.0-QA2")
+    implementation("com.vungle:publisher-sdk-android:6.12.0")
     implementation("com.applovin:applovin-sdk:+@aar")
 }

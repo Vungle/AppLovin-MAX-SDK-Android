@@ -49,6 +49,7 @@ import com.vungle.warren.ui.view.MediaView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VungleMediationAdapter
@@ -59,6 +60,8 @@ public class VungleMediationAdapter
     private static       InitializationStatus status;
 
     private VungleBanner adViewAd;
+
+    private Map<String, MaxNativeAd> maxNativeAdMap;
 
     // Explicit default constructor declaration
     public VungleMediationAdapter(final AppLovinSdk sdk) { super( sdk ); }
