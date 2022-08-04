@@ -3,8 +3,10 @@ package com.applovin.mediation.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.applovin.mediation.MaxAdFormat;
@@ -61,7 +63,9 @@ public class VungleMediationAdapter
 
     private VungleBanner adViewAd;
 
-    private Map<String, MaxNativeAd> maxNativeAdMap;
+    private NativeAd nativeAd;
+    private MediaView mediaView;
+    private NativeAdLayout nativeAdLayout;
 
     // Explicit default constructor declaration
     public VungleMediationAdapter(final AppLovinSdk sdk) { super( sdk ); }
@@ -70,33 +74,36 @@ public class VungleMediationAdapter
     public void loadNativeAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxNativeAdAdapterListener maxNativeAdAdapterListener) {
 
         //assume as is loaded
-        final Bundle serverParameters = maxAdapterResponseParameters.getServerParameters();
-        final boolean isNativeBanner = serverParameters.getBoolean( "is_native_banner");
         final String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
 
-        NativeAd nativeAd = new NativeAd(activity, placementId);
-        MediaView mediaView = new MediaView(activity);
+        nativeAd = new NativeAd(activity, placementId);
         ImageView iconView = new ImageView(activity);
         AdConfig adConfig = new AdConfig();
-        NativeAdLayout nativeAdLayout = new NativeAdLayout(activity);
+        mediaView = new MediaView(activity);
+        nativeAdLayout = new NativeAdLayout(activity);
+        nativeAdLayout.disableLifeCycleManagement(false);
+
         nativeAd.loadAd(adConfig, new NativeAdListener() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
+
                 MaxNativeAd maxNativeAd = new MaxNativeAd.Builder()
                         .setAdFormat(MaxAdFormat.NATIVE)
                         .setTitle(nativeAd.getAdTitle())
                         .setBody(nativeAd.getAdBodyText())
                         .setMediaView(mediaView)
                         .setIconView(iconView)
+                        .setCallToAction(nativeAd.getAdCallToActionText())
                         .build();
 
                 List<View> clickableViews = new ArrayList<>();
-                clickableViews.add(maxNativeAd.getIconView());
-                clickableViews.add(maxNativeAd.getMediaView());
+                clickableViews.add(iconView);
+                clickableViews.add(mediaView);
                 nativeAd.registerViewForInteraction(nativeAdLayout,
                         mediaView,
                         iconView,
                         clickableViews);
+
                 maxNativeAdAdapterListener.onNativeAdLoaded(maxNativeAd, null);
             }
 
@@ -207,6 +214,26 @@ public class VungleMediationAdapter
         {
             adViewAd.destroyAd();
             adViewAd = null;
+        }
+
+        if (nativeAdLayout != null) {
+            nativeAdLayout.removeAllViews();
+            if (nativeAdLayout.getParent() != null) {
+                ((ViewGroup) nativeAdLayout.getParent()).removeView(nativeAdLayout);
+            }
+        }
+
+        if (mediaView != null) {
+            mediaView.removeAllViews();
+            if (mediaView.getParent() != null) {
+                ((ViewGroup) mediaView.getParent()).removeView(mediaView);
+            }
+        }
+
+        if ( nativeAd != null)
+        {
+            nativeAd.unregisterView();
+            nativeAd.destroy();
         }
     }
 
@@ -422,6 +449,9 @@ public class VungleMediationAdapter
         String bidResponse = parameters.getBidResponse();
         boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
 
+        final Bundle serverParameters = parameters.getServerParameters();
+        final boolean isNativeBanner = serverParameters.getBoolean( "is_native_banner");
+
         final String adFormatLabel = adFormat.getLabel();
         String placementId = parameters.getThirdPartyAdPlacementId();
         log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + adFormatLabel + " ad for placement: " + placementId + "..." );
@@ -447,7 +477,6 @@ public class VungleMediationAdapter
         AdConfig.AdSize adSize = vungleAdSize( adFormat );
         adConfig.setAdSize( adSize );
 
-        Bundle serverParameters = parameters.getServerParameters();
         if ( serverParameters.containsKey( "is_muted" ) )
         {
             adConfig.setMuted( serverParameters.getBoolean( "is_muted" ) );
