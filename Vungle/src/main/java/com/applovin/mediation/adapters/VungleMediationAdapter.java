@@ -4,6 +4,7 @@ import static com.applovin.sdk.AppLovinSdkUtils.runOnUiThread;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -1061,6 +1062,10 @@ public class VungleMediationAdapter
                 nativeAd.unregisterView();
                 nativeAd.destroy();
             }
+
+            if (vungleMaxNativeAd != null) {
+                vungleMaxNativeAd.destroyAd();
+            }
         }
     }
 
@@ -1094,11 +1099,13 @@ public class VungleMediationAdapter
             clickableViews.add(getMaxNativeAdView().getMainView());
             clickableViews.add(mediaView);
 
-            View mainView = maxNativeAdView.getMainView();
+            ViewGroup mediaContentGroup = maxNativeAdView.getMediaContentViewGroup();
 
-            if (mainView instanceof ViewGroup) {
+
+            if (mediaContentGroup != null) {
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                ((ViewGroup) mainView).addView(mediaView, params);
+                ((ViewGroup) mediaContentGroup).addView(nativeAdLayout, params);
+                nativeAdLayout.addView(mediaView);
             }
 
             nativeAd.registerViewForInteraction(nativeAdLayout,
@@ -1106,5 +1113,10 @@ public class VungleMediationAdapter
                     getMaxNativeAdView().getIconImageView(),
                     clickableViews);
         }
+
+        public void destroyAd(){
+            maxNativeAdView.removeAllViews();
+        }
     }
+
 }
