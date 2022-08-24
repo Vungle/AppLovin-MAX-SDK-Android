@@ -565,12 +565,7 @@ public class VungleMediationAdapter
                 Vungle.Consent consentStatus = hasUserConsent ? Vungle.Consent.OPTED_IN : Vungle.Consent.OPTED_OUT;
                 Vungle.updateConsentStatus( consentStatus, "" );
             }
-            Log.d(TAG, "Privacy - hasUserConsent Dialog: " + hasUserConsent);
-        } else {
-            Log.d(TAG, "Privacy - hasUserConsent Dialog: Not Set");
         }
-
-
 
         if ( AppLovinSdk.VERSION_CODE >= 91100 )
         {
