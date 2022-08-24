@@ -4,8 +4,8 @@ import static com.applovin.sdk.AppLovinSdkUtils.runOnUiThread;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +84,7 @@ public class VungleMediationAdapter
     @Override
     public void initialize(final MaxAdapterInitializationParameters parameters, final Activity activity, final OnCompletionListener onCompletionListener)
     {
-        updateUserPrivacySettings( parameters );
+//        updateUserPrivacySettings( parameters );
 
         if ( initialized.compareAndSet( false, true ) )
         {
@@ -222,7 +222,7 @@ public class VungleMediationAdapter
             return;
         }
 
-        updateUserPrivacySettings( parameters );
+//        updateUserPrivacySettings( parameters );
         loadFullscreenAd( parameters, new LoadAdCallback()
         {
             @Override
@@ -376,7 +376,7 @@ public class VungleMediationAdapter
 
         final Bundle serverParameters = parameters.getServerParameters();
 
-        updateUserPrivacySettings( parameters );
+//        updateUserPrivacySettings( parameters );
 
         final String adFormatLabel = adFormat.getLabel();
         String placementId = parameters.getThirdPartyAdPlacementId();
@@ -565,14 +565,12 @@ public class VungleMediationAdapter
                 Vungle.Consent consentStatus = hasUserConsent ? Vungle.Consent.OPTED_IN : Vungle.Consent.OPTED_OUT;
                 Vungle.updateConsentStatus( consentStatus, "" );
             }
+            Log.d(TAG, "Privacy - hasUserConsent Dialog: " + hasUserConsent);
+        } else {
+            Log.d(TAG, "Privacy - hasUserConsent Dialog: Not Set");
         }
 
-        Boolean hasUserConsent = getPrivacySetting( "hasUserConsent", parameters );
-        if ( hasUserConsent != null )
-        {
-            Vungle.Consent consentStatus = hasUserConsent ? Vungle.Consent.OPTED_IN : Vungle.Consent.OPTED_OUT;
-            Vungle.updateConsentStatus( consentStatus, "" );
-        }
+
 
         if ( AppLovinSdk.VERSION_CODE >= 91100 )
         {
@@ -582,13 +580,17 @@ public class VungleMediationAdapter
                 Vungle.Consent ccpaStatus = isDoNotSell ? Vungle.Consent.OPTED_OUT : Vungle.Consent.OPTED_IN;
                 Vungle.updateCCPAStatus( ccpaStatus );
             }
+            Log.d(TAG, "Privacy - isDoNotSell: " + isDoNotSell);
         }
 
         Boolean isAgeRestrictedUser = getPrivacySetting( "isAgeRestrictedUser", parameters );
+
         if ( isAgeRestrictedUser != null )
         {
             Vungle.updateUserCoppaStatus( isAgeRestrictedUser );
         }
+        Log.d(TAG, "Privacy - isAgeRestrictedUser: " + isAgeRestrictedUser);
+
     }
 
     private Boolean getPrivacySetting(final String privacySetting, final MaxAdapterParameters parameters)
@@ -1101,10 +1103,12 @@ public class VungleMediationAdapter
 
             ViewGroup mediaContentGroup = maxNativeAdView.getMediaContentViewGroup();
 
-
             if (mediaContentGroup != null) {
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                ((ViewGroup) mediaContentGroup).addView(nativeAdLayout, params);
+                mediaContentGroup.addView(nativeAdLayout, params);
+                if (mediaView.getParent() != null) {
+                    ((ViewGroup)mediaView.getParent()).removeView(mediaView);
+                }
                 nativeAdLayout.addView(mediaView);
             }
 
