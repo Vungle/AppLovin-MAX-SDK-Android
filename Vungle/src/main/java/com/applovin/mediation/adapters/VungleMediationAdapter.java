@@ -126,6 +126,8 @@ public class VungleMediationAdapter
             // NOTE: `activity` can only be null in 11.1.0+, and `getApplicationContext()` is introduced in 11.1.0
             Context context = ( activity != null ) ? activity.getApplicationContext() : getApplicationContext();
 
+            updateUserPrivacySettings(parameters);
+
             // Note: Vungle requires the Application Context
             Vungle.init( appId, context, initCallback, settings );
         }
@@ -580,7 +582,7 @@ public class VungleMediationAdapter
 
         Boolean isAgeRestrictedUser = getPrivacySetting( "isAgeRestrictedUser", parameters );
 
-        if ( isAgeRestrictedUser != null )
+        if ( isAgeRestrictedUser != null && !Vungle.isInitialized())
         {
             Vungle.updateUserCoppaStatus( isAgeRestrictedUser );
         }
