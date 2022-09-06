@@ -46,4 +46,5 @@ val libraryArtifactId by extra("vungle-adapter")
 dependencies {
     implementation("com.vungle:publisher-sdk-android:6.12.0")
     implementation("com.applovin:applovin-sdk:+@aar")
+    implementation(project(":vng-android-sdk:vungle-ads"))
 }
