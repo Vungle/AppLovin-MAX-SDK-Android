@@ -44,7 +44,7 @@ val libraryVersionCode by extra((versionMajor * 1000000) + (versionMinor * 10000
 val libraryArtifactId by extra("vungle-adapter")
 
 dependencies {
-    implementation("com.vungle:publisher-sdk-android:6.12.0")
+//    implementation("com.vungle:publisher-sdk-android:6.12.0")
     implementation("com.applovin:applovin-sdk:+@aar")
     implementation(project(":vng-android-sdk:vungle-ads"))
 }
