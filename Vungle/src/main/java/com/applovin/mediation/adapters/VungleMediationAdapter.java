@@ -70,20 +70,12 @@ public class VungleMediationAdapter
     private static       InitializationStatus status;
 
     private BannerAd bannerAd;
-
     private VungleNativeAd vungleMaxNativeAd;
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
 
     // Explicit default constructor declaration
     public VungleMediationAdapter(final AppLovinSdk sdk) { super( sdk ); }
-
-    @Override
-    public void loadNativeAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxNativeAdAdapterListener maxNativeAdAdapterListener) {
-        final String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
-        vungleMaxNativeAd = new VungleNativeAd(activity, placementId, maxNativeAdAdapterListener);
-        vungleMaxNativeAd.loadAd();
-    }
 
     @Override
     public void initialize(final MaxAdapterInitializationParameters parameters, final Activity activity, final OnCompletionListener onCompletionListener) {
@@ -150,10 +142,12 @@ public class VungleMediationAdapter
             bannerAd = null;
         }
 
-        if (vungleMaxNativeAd !=null ) {
+        if (vungleMaxNativeAd != null ) {
             vungleMaxNativeAd.destroyAd();
             vungleMaxNativeAd = null;
         }
+        interstitialAd = null;
+        rewardedAd = null;
     }
 
     //region Signal Collection
@@ -262,16 +256,12 @@ public class VungleMediationAdapter
     @Override
     public void showInterstitialAd(final MaxAdapterResponseParameters parameters, final Activity activity, final MaxInterstitialAdapterListener listener)
     {
-        if (interstitialAd == null) {
-            return;
-        }
-        String bidResponse = parameters.getBidResponse();
-        boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
-        String placementId = parameters.getThirdPartyAdPlacementId();
-        log( "Showing " + ( isBiddingAd ? "bidding " : "" ) + "interstitial ad for placement: " + placementId + "..." );
-
-        if ( interstitialAd.canPlayAd() )
+        if ( interstitialAd != null && interstitialAd.canPlayAd() )
         {
+            String bidResponse = parameters.getBidResponse();
+            boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
+            String placementId = parameters.getThirdPartyAdPlacementId();
+            log( "Showing " + ( isBiddingAd ? "bidding " : "" ) + "interstitial ad for placement: " + placementId + "..." );
             interstitialAd.play();
         } else {
             log( "Interstitial ad not ready" );
@@ -286,9 +276,7 @@ public class VungleMediationAdapter
     public void loadRewardedAd(final MaxAdapterResponseParameters parameters, final Activity activity, final MaxRewardedAdapterListener listener)
     {
         String bidResponse = parameters.getBidResponse();
-        boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
         String placementId = parameters.getThirdPartyAdPlacementId();
-        log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + "rewarded ad for placement: " + placementId + "..." );
 
         if ( !VungleAds.isInitialized() )
         {
@@ -383,24 +371,22 @@ public class VungleMediationAdapter
             listener.onRewardedAdLoaded();
             return;
         }
+        boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
+        log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + "rewarded ad for placement: " + placementId + "..." );
         String adMarkup = getAdMarkup( parameters );
-
         rewardedAd.load( adMarkup );
     }
 
     @Override
     public void showRewardedAd(final MaxAdapterResponseParameters parameters, final Activity activity, final MaxRewardedAdapterListener listener)
     {
-        if (rewardedAd == null) {
-            return;
-        }
         String bidResponse = parameters.getBidResponse();
         boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
         String placementId = parameters.getThirdPartyAdPlacementId();
         log( "Showing " + ( isBiddingAd ? "bidding " : "" ) + "rewarded ad for placement: " + placementId + "..." );
 
 
-        if ( rewardedAd.canPlayAd() )
+        if ( rewardedAd != null && rewardedAd.canPlayAd() )
         {
             configureReward( parameters );
             rewardedAd.play();
@@ -418,13 +404,10 @@ public class VungleMediationAdapter
     public void loadAdViewAd(final MaxAdapterResponseParameters parameters, final MaxAdFormat adFormat, final Activity activity, final MaxAdViewAdapterListener listener)
     {
         String bidResponse = parameters.getBidResponse();
-        boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
-
         final Bundle serverParameters = parameters.getServerParameters();
 
         final String adFormatLabel = adFormat.getLabel();
         String placementId = parameters.getThirdPartyAdPlacementId();
-        log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + adFormatLabel + " ad for placement: " + placementId + "..." );
 
         if ( !VungleAds.isInitialized() )
         {
@@ -509,7 +492,8 @@ public class VungleMediationAdapter
             return;
         }
         String adMarkup = getAdMarkup( parameters );
-
+        boolean isBiddingAd = AppLovinSdkUtils.isValidString( bidResponse );
+        log( "Loading " + ( isBiddingAd ? "bidding " : "" ) + adFormatLabel + " ad for placement: " + placementId + "..." );
         bannerAd.load( adMarkup );
     }
 
@@ -538,10 +522,15 @@ public class VungleMediationAdapter
         }
     }
 
+    @Override
+    public void loadNativeAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxNativeAdAdapterListener maxNativeAdAdapterListener) {
+        final String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
+        vungleMaxNativeAd = new VungleNativeAd(activity, placementId, maxNativeAdAdapterListener);
+        vungleMaxNativeAd.loadAd();
+    }
     //endregion
 
     //region Helper Methods
-
     private AdConfig createAdConfig(final Bundle serverParameters)
     {
         final AdConfig config = new AdConfig();
