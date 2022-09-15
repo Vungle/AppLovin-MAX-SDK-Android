@@ -526,7 +526,8 @@ public class VungleMediationAdapter
     public void loadNativeAd(MaxAdapterResponseParameters maxAdapterResponseParameters, Activity activity, MaxNativeAdAdapterListener maxNativeAdAdapterListener) {
         final String placementId = maxAdapterResponseParameters.getThirdPartyAdPlacementId();
         vungleMaxNativeAd = new VungleNativeAd(activity, placementId, maxNativeAdAdapterListener);
-        vungleMaxNativeAd.loadAd();
+        String adMarkup = getAdMarkup( maxAdapterResponseParameters );
+        vungleMaxNativeAd.loadAd(adMarkup);
     }
     //endregion
 
@@ -762,10 +763,10 @@ public class VungleMediationAdapter
             });
         }
 
-        public void loadAd()
+        public void loadAd(String adMarkup)
         {
             nativeAd.unregisterView();
-            nativeAd.load();
+            nativeAd.load(adMarkup);
         }
 
         public void destroyAd()
