@@ -9,8 +9,8 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.2.2")
-        classpath("com.android.library:com.android.library.gradle.plugin:7.2.2")
-        classpath(kotlin("gradle-plugin", version = "1.3.70"))
+        classpath("com.android.library:com.android.library.gradle.plugin:7.3.0")
+        classpath(kotlin("gradle-plugin", version = "1.7.10"))
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
     }
@@ -25,18 +25,18 @@ apply(plugin = "com.android.library")
 
 android {
     defaultConfig {
-        compileSdkVersion(31)
-        minSdkVersion(16)
-        buildConfigField("int", "VERSION_CODE", "06120001")
-        buildConfigField("String", "VERSION_NAME", "\"6.12.0.1\"");
+        compileSdk = 31
+        minSdk = 16
+        buildConfigField("int", "VERSION_CODE", "07000000")
+        buildConfigField("String", "VERSION_NAME", "\"7.0.0.0\"");
     }
 }
 
 
-private val versionMajor = 6
-private val versionMinor = 12
+private val versionMajor = 7
+private val versionMinor = 0
 private val versionPatch = 0
-private val versionAdapterPatch = 1
+private val versionAdapterPatch = 0
 
 val libraryVersionName by extra("${versionMajor}.${versionMinor}.${versionPatch}.${versionAdapterPatch}")
 val libraryVersionCode by extra((versionMajor * 1000000) + (versionMinor * 10000) + (versionPatch * 100) + versionAdapterPatch)
