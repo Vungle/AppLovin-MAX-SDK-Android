@@ -1,5 +1,24 @@
 # Changelog
 
+## 21.3.0.1
+* Add ability to set [publisher provided id](https://support.google.com/admanager/answer/2880055) via local extra parameters by calling `setLocalExtraParameter("ppid", String)`.
+
+## 21.3.0.0
+* Certified with GoogleAdManager SDK 21.3.0.
+
+## 21.2.0.0
+* Certified with GoogleAdManager SDK 21.2.0.
+* Unity: Add assembly definition files.
+
+## 21.1.0.3
+* Fix `NoClassDefFoundError` introduced in 21.1.0.2.
+
+## 21.1.0.2
+* Add support for app open ads.
+
+## 21.1.0.1
+* Fix impression tracking for fullscreen ads.
+
 ## 21.1.0.0
 * Certified with GoogleAdManager SDK 21.1.0.
 * Use local scope copy of native ad while preparing view.

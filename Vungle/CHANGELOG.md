@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.12.0.2
+* Add support for app open ads.
+
+## 6.12.0.1
+* Add support for native ads. Note: Contact your Vungle team for access to native format.
+* Add orientation support for fullscreen ads.
+
+## 6.12.0.0
+* Certified with Vungle SDK 6.12.0.
+
 ## 6.11.0.2
 * Update privacy settings before collecting signal.
 

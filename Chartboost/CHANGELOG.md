@@ -1,5 +1,15 @@
 # Changelog
 
+## 9.1.0.0
+* Certified with Chartboost SDK 9.1.0.
+
+## 9.0.0.1
+* Fix NPE caused by calling `getLocation()` on a null adView.
+
+## 9.0.0.0
+* Certified with Chartboost SDK 9.0.0.
+* Add collection of creative id for fullscreen ads.
+
 ## 8.4.3.1
 * Fix incomplete ad display failure error message.
 

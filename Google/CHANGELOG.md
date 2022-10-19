@@ -1,5 +1,23 @@
 # Changelog
 
+## 21.3.0.0
+* Certified with Google SDK 21.3.0.
+
+## 21.2.0.2
+* App open updates.
+
+## 21.2.0.1
+* Unity: Add assembly definition files.
+
+## 21.2.0.0
+* Certified with Google SDK 21.2.0.
+
+## 21.1.0.2
+* Add support for app open ads.
+
+## 21.1.0.1
+* Fix impression tracking for fullscreen ads.
+
 ## 21.1.0.0
 * Certified with Google SDK 21.1.0.
 
