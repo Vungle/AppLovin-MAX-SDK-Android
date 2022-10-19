@@ -757,21 +757,13 @@ public class VungleMediationAdapter
 
         public void loadAd(String adMarkup)
         {
-            nativeAd.unregisterView();
+            // TODO: relocate
+//            nativeAd.unregisterView();
             nativeAd.load(adMarkup);
         }
 
         public void destroyAd()
         {
-//            if (nativeAdLayout != null)
-//            {
-//                nativeAdLayout.removeAllViews();
-//                if (nativeAdLayout.getParent() != null)
-//                {
-//                    ((ViewGroup) nativeAdLayout.getParent()).removeView(nativeAdLayout);
-//                }
-//            }
-
             if (mediaView != null)
             {
                 mediaView.removeAllViews();
@@ -811,6 +803,8 @@ public class VungleMediationAdapter
                         .setIconView(iconView)
                         .setCallToAction(nativeAd.getAdCallToActionText())
             );
+            this.mediaView = mediaView;
+            this.nativeAd = nativeAd;
         }
 
         public MaxNativeAdView getMaxNativeAdView()
@@ -846,6 +840,7 @@ public class VungleMediationAdapter
                     mediaView,
                     getMaxNativeAdView().getIconImageView(),
                     clickableViews);
+            maxNativeAdView.addView(frameLayout);
         }
 
         public void destroyAd()
