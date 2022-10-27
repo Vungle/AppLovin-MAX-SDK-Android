@@ -93,7 +93,7 @@ public class VungleMediationAdapter
 
             status = InitializationStatus.INITIALIZING;
 
-            Plugin.addWrapperInfo(VungleApiClient.WrapperFramework.max, getAdapterVersion());
+            Plugin.addWrapperInfo(Plugin.WrapperFramework.max, getAdapterVersion());
 
             // NOTE: `activity` can only be null in 11.1.0+, and `getApplicationContext()` is introduced in 11.1.0
             Context context = (activity != null) ? activity.getApplicationContext() : getApplicationContext();
@@ -520,7 +520,7 @@ public class VungleMediationAdapter
                 // TODO:
                 //  adConfig.setMuted( serverParameters.getBoolean( "is_muted" ) );
             }
-            bannerAd = new BannerAd(placementId, adConfig);
+            bannerAd = new BannerAd(getApplicationContext(), placementId, adConfig);
             bannerAd.setAdListener(new BaseAdListener() {
 
                 @Override
