@@ -887,12 +887,10 @@ public class VungleMediationAdapter
                     }
                     frameLayout.addView(mediaView);
                 }
-
                 nativeAd.registerViewForInteraction(frameLayout,
                         mediaView,
                         getMaxNativeAdView().getIconImageView(),
                         clickableViews);
-                maxNativeAdView.addView(frameLayout);
             }
 
             public void destroyAd() {
