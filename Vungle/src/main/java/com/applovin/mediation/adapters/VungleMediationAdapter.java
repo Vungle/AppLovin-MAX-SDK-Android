@@ -18,7 +18,6 @@ import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.MaxReward;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
 import com.applovin.mediation.adapter.MaxAdapterError;
-import com.applovin.mediation.adapter.MaxAppOpenAdapter;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
 import com.applovin.mediation.adapter.MaxNativeAdAdapter;
 import com.applovin.mediation.adapter.MaxRewardedAdapter;
@@ -56,7 +55,6 @@ import com.vungle.ads.RewardedAdListener;
 import com.vungle.ads.VungleAds;
 import com.vungle.ads.VungleException;
 import com.vungle.ads.VungleSettings;
-import com.vungle.ads.internal.network.VungleApiClient;
 import com.vungle.ads.internal.privacy.PrivacyConsent;
 import com.vungle.ads.internal.ui.view.MediaView;
 
@@ -348,13 +346,13 @@ public class VungleMediationAdapter
         });
 
         String adMarkup = getAdMarkup(parameters);
-        if (interstitialAd.canPlayAd())
+        if (appOpenAd.canPlayAd())
         {
             log("Interstitial ad loaded");
             listener.onAppOpenAdLoaded();
             return;
         }
-        interstitialAd.load(adMarkup);
+        appOpenAd.load(adMarkup);
     }
 
     public void showAppOpenAd(final MaxAdapterResponseParameters parameters, @Nullable final Activity activity, final MaxAppOpenAdapterListener listener)
@@ -373,10 +371,10 @@ public class VungleMediationAdapter
         listener.onAppOpenAdDisplayFailed(new MaxAdapterError(-4205, "Ad Display Failed"));
     }
     //endregion
-        //region MaxRewardedAdapter
+    //region MaxRewardedAdapter
 
-        @Override
-        public void loadRewardedAd ( final MaxAdapterResponseParameters parameters,
+    @Override
+    public void loadRewardedAd ( final MaxAdapterResponseParameters parameters,
         final Activity activity, final MaxRewardedAdapterListener listener)
         {
             String bidResponse = parameters.getBidResponse();
