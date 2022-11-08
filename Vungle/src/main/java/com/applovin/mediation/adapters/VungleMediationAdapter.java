@@ -159,7 +159,7 @@ public class VungleMediationAdapter
 
         updateUserPrivacySettings(parameters);
 
-        String signal = VungleAds.getBiddingToken();
+        String signal = VungleAds.getBiddingToken(getApplicationContext());
         log(signal);
         callback.onSignalCollected(signal);
     }
@@ -183,7 +183,7 @@ public class VungleMediationAdapter
         }
 
         AdConfig adConfig = createAdConfig(parameters.getServerParameters());
-        interstitialAd = new InterstitialAd(placementId, adConfig);
+        interstitialAd = new InterstitialAd(getApplicationContext(), placementId, adConfig);
         interstitialAd.setAdListener(new BaseAdListener() {
 
             @Override
@@ -284,7 +284,7 @@ public class VungleMediationAdapter
         updateUserPrivacySettings( parameters );
 
         AdConfig adConfig = createAdConfig(parameters.getServerParameters());
-        appOpenAd = new InterstitialAd(placementId, adConfig);
+        appOpenAd = new InterstitialAd(getApplicationContext(), placementId, adConfig);
         appOpenAd.setAdListener(new BaseAdListener()
         {
 
@@ -390,7 +390,7 @@ public class VungleMediationAdapter
             }
             updateUserPrivacySettings(parameters);
             AdConfig adConfig = createAdConfig(parameters.getServerParameters());
-            rewardedAd = new RewardedAd(placementId, adConfig);
+            rewardedAd = new RewardedAd(getApplicationContext(), placementId, adConfig);
             rewardedAd.setAdListener(new RewardedAdListener() {
                 boolean hasGrantedReward = false;
 
