@@ -27,16 +27,16 @@ android {
     defaultConfig {
         compileSdkVersion(31)
         minSdkVersion(16)
-        buildConfigField("int", "VERSION_CODE", "06120001")
-        buildConfigField("String", "VERSION_NAME", "\"6.12.0.1\"");
+        buildConfigField("int", "VERSION_CODE", "06120100")
+        buildConfigField("String", "VERSION_NAME", "\"6.12.1.0\"");
     }
 }
 
 
 private val versionMajor = 6
 private val versionMinor = 12
-private val versionPatch = 0
-private val versionAdapterPatch = 1
+private val versionPatch = 1
+private val versionAdapterPatch = 0
 
 val libraryVersionName by extra("${versionMajor}.${versionMinor}.${versionPatch}.${versionAdapterPatch}")
 val libraryVersionCode by extra((versionMajor * 1000000) + (versionMinor * 10000) + (versionPatch * 100) + versionAdapterPatch)
@@ -44,6 +44,11 @@ val libraryVersionCode by extra((versionMajor * 1000000) + (versionMinor * 10000
 val libraryArtifactId by extra("vungle-adapter")
 
 dependencies {
-    implementation("com.vungle:publisher-sdk-android:6.12.0")
+    implementation("androidx.annotation:annotation:1.5.0")
+
+    //TODO: Replace with Line 50 when uploaded to Maven
+    implementation("com.github.Vungle:vungle-android-sdk:6.12.1-RC3")
+
+//    implementation("com.vungle:publisher-sdk-android:6.12.1")
     implementation("com.applovin:applovin-sdk:+@aar")
 }

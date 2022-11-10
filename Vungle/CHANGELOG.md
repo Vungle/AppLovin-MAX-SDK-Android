@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.12.1.0
+* Add Support for Vungle SDK 6.12.1.0
+
 ## 6.12.0.2
 * Add support for app open ads.
 
