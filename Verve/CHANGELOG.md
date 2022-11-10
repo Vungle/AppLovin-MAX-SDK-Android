@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.16.1.0
+* Certified with Verve SDK 2.16.1.
+* Add additional details for ad display failures.
+
+## 2.16.0.0
+* Certified with Verve SDK 2.16.0.
+
+## 2.15.1.0
+* Certified with Verve SDK 2.15.1.
+
+## 2.15.0.0
+* Certified with Verve SDK 2.15.0.
+* Update consent status before collecting signal.
+* Add support for passing local parameter "is_location_collection_enabled" to set `HyBid.setLocationUpdatesEnabled()`.
+
 ## 2.14.0.0
 * Certified with Verve SDK 2.14.0.
 

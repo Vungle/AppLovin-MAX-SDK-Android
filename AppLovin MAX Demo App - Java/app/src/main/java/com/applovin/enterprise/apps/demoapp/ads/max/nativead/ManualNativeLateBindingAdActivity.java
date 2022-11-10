@@ -81,6 +81,13 @@ public class ManualNativeLateBindingAdActivity
             {
                 logAnonymousCallback();
             }
+
+            @Override
+            public void onNativeAdExpired(final MaxAd ad)
+            {
+                logAnonymousCallback();
+                nativeAdLoader.loadAd();
+            }
         } );
     }
 
@@ -110,6 +117,18 @@ public class ManualNativeLateBindingAdActivity
     public void onShowAdClicked(View view)
     {
         MaxNativeAdView adView = createNativeAdView();
+
+        // Check if ad is expired before rendering
+        if ( nativeAd.getNativeAd() != null && nativeAd.getNativeAd().isExpired() )
+        {
+            // Destroy expired ad and load a new one
+            nativeAdLoader.destroy(nativeAd);
+            nativeAdLoader.loadAd();
+
+            showAdButton.setEnabled( false );
+            return;
+        }
+
         // Render the ad separately
         nativeAdLoader.render( adView, nativeAd );
         nativeAdLayout.addView( adView );
@@ -121,7 +140,7 @@ public class ManualNativeLateBindingAdActivity
         MaxNativeAdViewBinder binder = new MaxNativeAdViewBinder.Builder( R.layout.native_custom_ad_view )
                 .setTitleTextViewId( R.id.title_text_view )
                 .setBodyTextViewId( R.id.body_text_view )
-                .setAdvertiserTextViewId( R.id.advertiser_textView )
+                .setAdvertiserTextViewId( R.id.advertiser_text_view )
                 .setIconImageViewId( R.id.icon_image_view )
                 .setMediaContentViewGroupId( R.id.media_view_container )
                 .setOptionsContentViewGroupId( R.id.options_view )

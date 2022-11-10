@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.9.10.3
+* Add CCPA support.
+
+## 1.9.10.2
+* Update Unity dependencies.
+
+## 1.9.10.1
+* Update Unity dependencies.
+
+## 1.9.10.0
+* Certified with BidMachine SDK 1.9.10.
+
+## 1.9.4.3
+* Add BidMachine repository to Unity plugin.
+
 ## 1.9.4.2
 * Add support for passing creative id to SDK.
 

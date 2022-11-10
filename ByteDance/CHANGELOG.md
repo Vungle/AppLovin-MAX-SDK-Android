@@ -1,5 +1,42 @@
 # Changelog
 
+## 4.8.0.5.0
+* Certified with ByteDance SDK 4.8.0.5.
+
+## 4.7.0.9.1
+* Remove initialization status check before collecting signal.
+
+## 4.7.0.9.0
+* Certified with ByteDance SDK 4.7.0.9.
+
+## 4.7.0.8.0
+* Certified with ByteDance SDK 4.7.0.8.
+
+## 4.7.0.7.0
+* Certified with ByteDance SDK 4.7.0.7.
+
+## 4.7.0.6.0
+* Certified with ByteDance SDK 4.7.0.6.
+
+## 4.7.0.5.0
+* Certified with ByteDance SDK 4.7.0.5.
+
+## 4.7.0.4.0
+* Certified with ByteDance SDK 4.7.0.4.
+
+## 4.7.0.3.0
+* Certified with ByteDance SDK 4.7.0.3.
+
+## 4.6.0.4.0
+* Certified with ByteDance SDK 4.6.0.4.
+* Add support for app open ads.
+
+## 4.5.0.9.0
+* Certified with ByteDance SDK 4.5.0.9.
+
+## 4.5.0.7.0
+* Certified with ByteDance SDK 4.5.0.7.
+
 ## 4.5.0.6.0
 * Certified with ByteDance SDK 4.5.0.6.
 

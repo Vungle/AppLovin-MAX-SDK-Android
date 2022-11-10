@@ -1,5 +1,20 @@
 # Changelog
 
+## 5.3.2.0
+* Certified with Yandex SDK 5.3.2.
+
+## 5.3.1.0
+* Certified with Yandex SDK 5.3.1.
+
+## 5.3.0.1
+* Add support for native ads.
+
+## 5.3.0.0
+* Certified with Yandex SDK 5.3.0.
+
+## 5.2.1.0
+* Certified with Yandex SDK 5.2.1.
+
 ## 5.2.0.1
 * Update privacy settings before collecting signal.
 

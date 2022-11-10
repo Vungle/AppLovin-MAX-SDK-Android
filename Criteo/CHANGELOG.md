@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.8.1.0
+* Certified with Criteo SDK 4.8.1.
+
+## 4.8.0.0
+* Certified with Criteo SDK 4.8.0.
+
+## 4.7.0.0
+* Certified with Criteo SDK 4.7.0.
+
 ## 4.6.1.0
 * Certified with Criteo SDK 4.6.1.
 

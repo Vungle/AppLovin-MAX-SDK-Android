@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.16.0.0
+* Certified with MyTarget SDK 5.16.0.
+* Add additional details for ad display failures.
+
+## 5.15.5.0
+* Certified with MyTarget SDK 5.15.5.
+
+## 5.15.4.0
+* Certified with MyTarget SDK 5.15.4.
+
 ## 5.15.1.7
 * Update privacy settings before collecting signal.
 

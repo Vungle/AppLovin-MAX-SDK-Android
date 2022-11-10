@@ -1,5 +1,20 @@
 # Changelog
 
+## 10.1.1.0
+* Certified with InMobi SDK 10.1.1.
+
+## 10.0.9.3
+* Fix NPE caused due to calling `InMobiNative.getAdTitle()` on a `null` native ad instance.
+
+## 10.0.9.2
+* Add support for native ad view ads.
+
+## 10.0.9.1
+* Add impression callbacks for banners, MRECs, interstitials and rewarded ads and update `onAdImpressed()` to `onAdImpression()` for native ads.
+
+## 10.0.9.0
+* Certified with InMobi SDK 10.0.9.
+
 ## 10.0.8.1
 * Use local scope copy of native ad while preparing view.
 * Update privacy settings before collecting signal.
