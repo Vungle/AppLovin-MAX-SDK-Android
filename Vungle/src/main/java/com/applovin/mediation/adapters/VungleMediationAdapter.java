@@ -197,13 +197,8 @@ public class VungleMediationAdapter
 
         if ( isBiddingAd )
         {
-            if ( Vungle.canPlayAd( placementId, bidResponse ) )
-            {
-                log( "Interstitial ad loaded" );
-                listener.onInterstitialAdLoaded();
-
-                return;
-            }
+            // Not allowed to avoid calling loadAd() even if canPlayAd()=true when max_hb_cache=1.
+            // That will cause nURL missed issue.
         }
         else if ( Vungle.canPlayAd( placementId ) )
         {
@@ -289,13 +284,7 @@ public class VungleMediationAdapter
 
         if ( isBiddingAd )
         {
-            if ( Vungle.canPlayAd( placementId, bidResponse ) )
-            {
-                log( "App open ad loaded" );
-                listener.onAppOpenAdLoaded();
-
-                return;
-            }
+            // no-op
         }
         else if ( Vungle.canPlayAd( placementId ) )
         {
@@ -383,13 +372,7 @@ public class VungleMediationAdapter
 
         if ( isBiddingAd )
         {
-            if ( Vungle.canPlayAd( placementId, bidResponse ) )
-            {
-                log( "Rewarded ad loaded" );
-                listener.onRewardedAdLoaded();
-
-                return;
-            }
+            // no-op
         }
         else if ( Vungle.canPlayAd( placementId ) )
         {
@@ -491,11 +474,7 @@ public class VungleMediationAdapter
 
         if ( isBiddingAd )
         {
-            if ( Banners.canPlayAd( placementId, bidResponse, adSize ) )
-            {
-                showAdViewAd( adFormat, adConfig, parameters, listener, playAdCallback );
-                return;
-            }
+            // no-op
         }
         else if ( Banners.canPlayAd( placementId, adSize ) )
         {
