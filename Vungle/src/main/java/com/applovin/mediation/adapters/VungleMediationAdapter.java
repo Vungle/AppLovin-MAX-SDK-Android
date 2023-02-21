@@ -195,18 +195,8 @@ public class VungleMediationAdapter
             return;
         }
 
-        if ( isBiddingAd )
-        {
-            // Not allowed to avoid calling loadAd() even if canPlayAd()=true when max_hb_cache=1.
-            // That will cause nURL missed issue.
-        }
-        else if ( Vungle.canPlayAd( placementId ) )
-        {
-            log( "Interstitial ad loaded" );
-            listener.onInterstitialAdLoaded();
-
-            return;
-        }
+        // Not allowed to skip calling loadAd() even if canPlayAd()=true when max_hb_cache=1 or auto-cached ads.
+        // That will cause nURL missed issue.
 
         updateUserPrivacySettings( parameters );
         loadFullscreenAd( parameters, getContext( activity ), new LoadAdCallback()
@@ -278,18 +268,6 @@ public class VungleMediationAdapter
         {
             log( "App open ad failed to load due to an invalid placement id: " + placementId );
             listener.onAppOpenAdLoadFailed( MaxAdapterError.INVALID_CONFIGURATION );
-
-            return;
-        }
-
-        if ( isBiddingAd )
-        {
-            // no-op
-        }
-        else if ( Vungle.canPlayAd( placementId ) )
-        {
-            log( "App open ad loaded" );
-            listener.onAppOpenAdLoaded();
 
             return;
         }
@@ -366,18 +344,6 @@ public class VungleMediationAdapter
         {
             log( "Rewarded ad failed to load due to an invalid placement id: " + placementId );
             listener.onRewardedAdLoadFailed( MaxAdapterError.INVALID_CONFIGURATION );
-
-            return;
-        }
-
-        if ( isBiddingAd )
-        {
-            // no-op
-        }
-        else if ( Vungle.canPlayAd( placementId ) )
-        {
-            log( "Rewarded ad loaded" );
-            listener.onRewardedAdLoaded();
 
             return;
         }
@@ -470,16 +436,6 @@ public class VungleMediationAdapter
         if ( serverParameters.containsKey( "is_muted" ) )
         {
             adConfig.setMuted( serverParameters.getBoolean( "is_muted" ) );
-        }
-
-        if ( isBiddingAd )
-        {
-            // no-op
-        }
-        else if ( Banners.canPlayAd( placementId, adSize ) )
-        {
-            showAdViewAd( adFormat, adConfig, parameters, listener, playAdCallback );
-            return;
         }
 
         updateUserPrivacySettings( parameters );
