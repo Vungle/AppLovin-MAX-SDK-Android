@@ -1,1 +1,0 @@
-# Fyber Inneractive Adapter

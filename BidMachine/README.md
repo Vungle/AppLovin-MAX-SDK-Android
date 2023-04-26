@@ -1,1 +1,0 @@
-# BidMachine Adapter

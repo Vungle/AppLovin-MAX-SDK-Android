@@ -1,0 +1,70 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+rootProject.ext.versions = ["vungle": "7.0.0"]
+
+buildscript {
+    ext.kotlinVersion = '1.3.70'
+    repositories {
+        google()
+        mavenCentral()
+
+//        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://s01.oss.sonatype.org/content/groups/staging/" }
+    }
+}
+
+subprojects {
+    if (project.name == "AppLovin-MAX-SDK-Android") {
+        apply plugin: 'com.android.library'
+
+        android {
+            compileSdkVersion 33
+
+            defaultConfig {
+                minSdkVersion 16
+                targetSdkVersion 32
+            }
+
+            buildTypes {
+                release { minifyEnabled false }
+                debug { minifyEnabled false }
+            }
+
+            lintOptions {
+                abortOnError false
+            }
+        }
+
+        dependencies {
+            implementation("com.applovin:applovin-sdk:+@aar")
+            implementation("androidx.annotation:annotation:1.4.0")
+        }
+    }
+}
+
+afterEvaluate {
+    project.getSubprojects().forEach {
+        if (it.name == "AppLovin-MAX-SDK-Android") {
+            it.afterEvaluate {
+                it.android.defaultConfig.buildConfigField("String", "VERSION_NAME", "\"${it.android.defaultConfig.versionName}\"")
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

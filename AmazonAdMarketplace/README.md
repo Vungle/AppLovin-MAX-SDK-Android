@@ -1,1 +1,0 @@
-# Amazon Ad Marketplace Adapter

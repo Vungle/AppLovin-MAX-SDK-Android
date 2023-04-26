@@ -1,0 +1,4 @@
+rootProject.name='Vungle Max Mediation Jitpack Publish'
+
+include ':app'
+include ':AppLovin-MAX-SDK-Android'

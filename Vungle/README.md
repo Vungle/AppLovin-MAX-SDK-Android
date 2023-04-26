@@ -1,1 +1,0 @@
-# Vungle Adapter

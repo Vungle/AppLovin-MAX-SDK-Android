@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+<!-- TODO remove this once we have issue with certificates fixed on logs-apiqa.vungle.io -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">logs-apiqa.vungle.io</domain>
+    </domain-config>
+
+    <!-- Used for E2E testing of Real Time Ads feature. Not production.-->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">internal-aafdd3f38bd3c11ebbed60ad1496429a-33265314.us-west-2.elb.amazonaws.com</domain>
+    </domain-config>
+</network-security-config>

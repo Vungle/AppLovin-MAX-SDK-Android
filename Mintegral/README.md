@@ -1,1 +1,0 @@
-# Mintegral Adapter

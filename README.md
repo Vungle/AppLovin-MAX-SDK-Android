@@ -1,34 +1,55 @@
-# AppLovin MAX SDK
+<h2>Setting up the Project:</h2>
 
-## Overview
-MAX is AppLovin's in-app monetization solution.
+1. Clone repo:
+   git@github.com:Vungle/Vungle-TestApp-AppLovin-MAX-SDK-Android.git
 
-Move beyond the traditional monetization solution and integrate MAX. MAX is a single unbiased auction where advertisers get equal access to all ad inventory and bid simultaneously, which drives more competition and higher CPMs for you. You can read more about it [here](https://www.applovin.com/max-header-bidding).
+2. Add run permissions to these scripts:
+   `chmod +x scripts/cleanForTesting.sh` This script adds the necessary gradle files to build and compile the adapter
 
-Please check out our [documentation](https://dash.applovin.com/documentation/mediation/android/getting-started) to get started on integrating and enabling mediated networks using our guides.
+`chmod +x scripts/cleanForPublish.sh` This script removes gradle files added for local dev
 
-## Demo Apps
-To get started with the demo apps, follow the instructions below:
+3. Run `git submodule update --init --recursive` This will automatically set it to master
 
-1. Open your desired project in Android Studio: `DemoApp-Java` or `DemoApp-Kotlin`.
-2. Verify that the dependency `implementation 'com.applovin:applovin-sdk:+'` is included in your `build.gradle (Module: app)`.
-3. Update the `applovin.sdk.key` value in `AndroidManifest.xml` file with your AppLovin SDK key associated with your account.
-4. Update the package with your own unique identifier associated with the application you will create (or already created, if it is an existing app) in the MAX dashboard in your `build.gradle (Module: app)`.
-5. Update the unique MAX ad unit id value within each ad's activity code. Each ad format will correspond to a unique MAX ad unit ID you created in the AppLovin dashboard for the package used before. 
+4. Run `scripts/cleanForTesting.sh`
 
-<img src="https://user-images.githubusercontent.com/20387467/116483017-20195500-a83b-11eb-9440-d2fd7ac06a96.jpg" width="350" height="700" />
+5. Check whether `app`、`AppLovin-MAX-SDK-Android` on the correct branch
 
-## Error Codes
-| Code          | Description   |
-| ------------- |:-------------:|
-| -1            | Indicates an unspecified error with one of the mediated network SDKs. |
-| 204           | Indicates that no ads are currently eligible for your device. |
-| -102          | Indicates that the ad request timed out (usually due to poor connectivity). |
-| -103          | Indicates that the device is not connected to the internet (e.g. airplane mode). |
-| -2051         | Indicates that the device is not connected to a VPN or the VPN connection is not working properly (Users in China Only). |
-| -5001         | Indicates that the ad failed to load due to various reasons (such as no networks being able to fill). |
-| -5201         | Indicates an internal state error with the AppLovin MAX SDK. |
-| -5601         | Indicates the provided `Activity` instance has been garbage collected while the AppLovin MAX SDK attempts to re-load an expired ad. |
+6. Open `app` project on AndroidStudio
 
-## Support
-For feature requests, improvements, questions or any other integration issues using MAX Mediation by AppLovin, contact us via our support page https://monetization-support.applovin.com/hc/en-us.
+7. Checkout develop for `AppLovin-MAX-SDK-Android` and `Vungle-TestApp-AppLovin-MAX-SDK-Android`
+
+<h2>Keeping Develop and Master Branch Up to Date:</h2>
+
+1.`master` branch is to track upstream : `https://github.com/AppLovin/AppLovin-MAX-SDK-Android` and should not have any code merged into it.
+
+2. Add `https://github.com/AppLovin/AppLovin-MAX-SDK-Android` and pull regularly upstream master into origin master to keep it up to date.
+3. Then pull master into develop
+
+<h2>How to build adapter library</h2>
+
+1. cd to `Vungle-TestApp-AppLovin-MAX-SDK-Android/AppLovin-MAX-SDK-Android/Vungle`
+2. run `gradle build`
+3. cd to `AppLovin-MAX-SDK-Android/Vungle/build/outputs/aar`
+4. Inside there should be a Vungle-debug.aar and Vungle-release.aar
+
+<h2>How to build test app for QA</h2>
+
+1. Go to bitrise: https://app.bitrise.io/app/7f6bf8f16d761e1e
+2. Run the workflow `AppCenter-QA-Release`
+   Releases can be found: https://appcenter.ms/orgs/Linda-Pham-Organization/apps/Android-Max-Mediation-Test-App/
+
+<h2>Adapter release check list</h2>
+
+1. After passing QA we'll need to run `scripts/cleanForPublish.sh` and update the PR to revert the gradle files in the Vungle directory.
+2. Commit and push changes to branch.
+3. Pull in latest changes from upstream master
+4. Submit an upstream PR to: https://github.com/AppLovin/AppLovin-MAX-SDK-Android master branch
+
+<h4>Adapter</h4>
+
+When sending out a PR upstream to: https://github.com/AppLovin/AppLovin-MAX-SDK-Android
+be sure first to run /scripts/cleanForPublish.sh before PR is sent to delete files used for develop
+
+When developing run cleanForTesting.sh
+When sending out a PR be sure first to run /scripts/cleanForPublish.sh
+

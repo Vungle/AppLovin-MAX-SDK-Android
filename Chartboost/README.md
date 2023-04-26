@@ -1,1 +1,0 @@
-# Chartboost Adapter
