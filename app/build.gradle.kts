@@ -62,7 +62,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-appset:16.0.2")
     implementation("com.applovin:applovin-sdk:+@aar")
     implementation(project(":AppLovin-MAX-SDK-Android"))
-//    implementation("com.github.vungle:AppLovin-MAX-SDK-Android:950a3a58f7")
+//    implementation("com.github.vungle:AppLovin-MAX-SDK-Android:806a00427c")
 
     implementation("com.microsoft.appcenter:appcenter-analytics:4.3.1")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.3.1")
