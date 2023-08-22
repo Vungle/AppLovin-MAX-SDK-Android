@@ -20,7 +20,6 @@ android.defaultConfig.versionCode = libraryVersionCode
 android.defaultConfig.versionName = libraryVersionName
 
 dependencies {
-    //implementation("com.vungle:publisher-sdk-android:${libraryVersions["vungle"]}")
     implementation("com.vungle:vungle-ads:${libraryVersions["vungle"]}")
 }
 
@@ -39,7 +38,7 @@ publishing {
 //            // Add the sources jar artifact to the publication.
 ////            artifact(sourcesJar)
 //
-//            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
+            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
             pom.withXml {
                 asNode().apply {
                     appendNode("name", libraryArtifactId)

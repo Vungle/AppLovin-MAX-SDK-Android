@@ -15,7 +15,7 @@ import com.applovin.mediation.nativeAds.MaxNativeAdListener
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader
 import com.applovin.mediation.nativeAds.MaxNativeAdView
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
-import com.vungle.maxmediation.testapp.AdUnitConstants.NATIVE_AD_WATERFALL
+import com.vungle.maxmediation.testapp.AdUnitConstants.NATIVE_AD_WATERFALL_MANUAL
 
 class ManualNativeAdActivity : BaseAdActivity() {
     private lateinit var nativeAdLoader: MaxNativeAdLoader
@@ -43,7 +43,7 @@ class ManualNativeAdActivity : BaseAdActivity() {
                 .build()
         nativeAdView = MaxNativeAdView(binder, this)
 
-        nativeAdLoader = MaxNativeAdLoader(NATIVE_AD_WATERFALL, this)
+        nativeAdLoader = MaxNativeAdLoader(NATIVE_AD_WATERFALL_MANUAL, this)
         nativeAdLoader.setRevenueListener (object : MaxAdRevenueListener {
             override fun onAdRevenuePaid(ad: MaxAd?) {
                 logAnonymousCallback()

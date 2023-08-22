@@ -17,7 +17,7 @@ android {
         targetSdk = 32
         versionCode = 70000
         versionName = "7.0.0"
-        versionNameSuffix = "-RC4"
+        versionNameSuffix = ""
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,6 +49,12 @@ android {
     namespace = "com.applovin.enterprise.apps.testapp"
 }
 
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, "seconds")
+    }
+}
+
 dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.appcompat:appcompat:1.5.0")
@@ -62,7 +68,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-appset:16.0.2")
     implementation("com.applovin:applovin-sdk:+@aar")
     implementation(project(":AppLovin-MAX-SDK-Android"))
-//    implementation("com.github.vungle:AppLovin-MAX-SDK-Android:806a00427c")
+//    implementation("com.github.vungle:AppLovin-MAX-SDK-Android:7.0.0.0-GA")
 
     implementation("com.microsoft.appcenter:appcenter-analytics:4.3.1")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.3.1")

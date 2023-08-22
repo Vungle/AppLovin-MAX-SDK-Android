@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.applovin.enterprise.apps.testapp.BuildConfig
 import com.applovin.enterprise.apps.testapp.R
-import com.applovin.impl.sdk.utils.Utils
 import com.applovin.sdk.AppLovinPrivacySettings
 import com.applovin.sdk.AppLovinSdk
 import com.applovin.sdk.AppLovinSdkUtils
@@ -16,6 +15,7 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import kotlinx.android.synthetic.main.activity_splash.*
+import java.lang.reflect.Field
 import java.util.concurrent.TimeUnit
 
 class SplashActivity : AppCompatActivity() {
@@ -48,10 +48,21 @@ class SplashActivity : AppCompatActivity() {
 
         val adapterVer = com.applovin.mediation.adapters.vungle.BuildConfig.VERSION_NAME
         val vngSdkVersion =
-            Utils.getString(Class.forName("com.vungle.ads.BuildConfig"), "VERSION_NAME")
+            getString("com.vungle.ads.BuildConfig", "VERSION_NAME")
 
         titleVersion.text =
             "Test app ver: ${BuildConfig.VERSION_NAME}\nAdapter ver: $adapterVer\nVng SDK ver: $vngSdkVersion"
+    }
+
+    private fun getString(className: String, fieldName: String): String {
+        return try {
+            val clz = Class.forName(className)
+            val field: Field = clz.getField(fieldName)
+            field.isAccessible = true
+            field.get(null) as String
+        } catch (e: Exception) {
+            ""
+        }
     }
 
     private fun onCreateDialog(consentType: String): Dialog {
