@@ -2,13 +2,20 @@ package com.applovin.mediation.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
+import androidx.annotation.NonNull;
 import com.applovin.impl.sdk.utils.BundleUtils;
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.MaxReward;
@@ -52,6 +59,7 @@ import com.vungle.ads.internal.ui.view.MediaView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.Nullable;
@@ -343,7 +351,8 @@ public class VungleMediationAdapter
             return;
         }
 
-        BannerAdSize adSize = vungleAdSize( adFormat );
+        BannerAdSize adSize = vungleAdSize( adFormat, parameters, context );
+        Log.e("VungleMediationAdapter", "Vungle banner AdSize[w*h]: " + adSize.getWidth()+"*"+adSize.getHeight());
         bannerAd = new BannerAd( context, placementId, adSize );
         bannerAd.setAdListener( new AdViewAdListener( adFormatLabel, listener ) );
 
@@ -403,19 +412,121 @@ public class VungleMediationAdapter
         }
     }
 
-    private static BannerAdSize vungleAdSize(final MaxAdFormat adFormat)
+    private int getAdaptiveBannerWidth(final MaxAdapterParameters parameters, final Context context)
     {
-        if ( adFormat == MaxAdFormat.BANNER )
+        if ( AppLovinSdk.VERSION_CODE >= 11_00_00_00 )
         {
-            return BannerAdSize.BANNER;
+            final Map<String, Object> localExtraParameters = parameters.getLocalExtraParameters();
+            Object widthObj = localExtraParameters.get( "adaptive_banner_width" );
+            if ( widthObj instanceof Integer )
+            {
+                return (int) widthObj;
+            }
+            else if ( widthObj != null )
+            {
+                e( "Expected parameter \"adaptive_banner_width\" to be of type Integer, received: " + widthObj.getClass() );
+            }
         }
-        else if ( adFormat == MaxAdFormat.LEADER )
-        {
-            return BannerAdSize.BANNER_LEADERBOARD;
+
+        int deviceWidthPx = getApplicationWindowWidth( context );
+        return AppLovinSdkUtils.pxToDp( context, deviceWidthPx );
+    }
+
+    private static int getDeviceHeightInDp(Context var0, int var1) {
+        if (var0 == null) {
+            return -1;
+        } else {
+            if (var0.getApplicationContext() != null) {
+                var0 = var0.getApplicationContext();
+            }
+
+            Resources var3 = var0.getResources();
+            if (var3 == null) {
+                return -1;
+            } else {
+                DisplayMetrics var2 = var3.getDisplayMetrics();
+                if (var2 == null) {
+                    return -1;
+                } else {
+                    Configuration var4 = var3.getConfiguration();
+                    if (var4 == null) {
+                        return -1;
+                    } else {
+                        int var5 = var4.orientation;
+                        if (var1 == 0) {
+                            var1 = var5;
+                        }
+
+                        return var1 == var5 ? Math.round((float)var2.heightPixels / var2.density) : Math.round((float)var2.widthPixels / var2.density);
+                    }
+                }
+            }
+        }
+    }
+
+    private BannerAdSize getCurrentOrientationAnchoredAdaptiveBannerAdSize(@NonNull Context context, int width) {
+        return getBannerAdSize(context, width, 50, 0);
+    }
+
+    private static BannerAdSize getBannerAdSize(Context context, int width, int minHeight, int orientation) {
+        int height = getDeviceHeightInDp(context, orientation);
+        if (height == -1) {
+            return null;
+        } else {
+            minHeight = Math.min(90, Math.round((float)height * 0.15F));
+            if (width > 655) {
+                height = Math.round((float)width / 728.0F * 90.0F);
+            } else if (width > 632) {
+                height = 81;
+            } else if (width > 526) {
+                height = Math.round((float)width / 468.0F * 60.0F);
+            } else if (width > 432) {
+                height = 68;
+            } else {
+                height = Math.round((float)width / 320.0F * 50.0F);
+            }
+
+            height = Math.max(Math.min(height, minHeight), 50);
+            return BannerAdSize.getInlineAdaptiveBannerAdSize(width, height);
+        }
+    }
+
+    private static int getApplicationWindowWidth(final Context context)
+    {
+        WindowManager windowManager = (WindowManager) context.getSystemService( Context.WINDOW_SERVICE );
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics( outMetrics );
+        return outMetrics.widthPixels;
+    }
+
+    private BannerAdSize vungleAdSize(
+        final MaxAdFormat adFormat,
+        final MaxAdapterParameters parameters,
+        final Context context)
+    {
+        if ( adFormat == MaxAdFormat.BANNER || adFormat == MaxAdFormat.LEADER ) {
+            final Map<String, Object> localExtraParameters = parameters.getLocalExtraParameters();
+            Object widthObj = localExtraParameters.get( "adaptive_banner" );
+            boolean isAdaptiveBanner = false;
+            if (widthObj instanceof String) {
+                try {
+                    isAdaptiveBanner = Boolean.parseBoolean( (String) widthObj );
+                } catch (Exception ignored) {
+                }
+            }
+
+            if ( isAdaptiveBanner ) {
+                int width = getAdaptiveBannerWidth( parameters, context );
+               return getCurrentOrientationAnchoredAdaptiveBannerAdSize( context, width );
+            } else {
+                return adFormat == MaxAdFormat.BANNER ? BannerAdSize.getBANNER()
+                    : BannerAdSize.getBANNER_LEADERBOARD();
+            }
         }
         else if ( adFormat == MaxAdFormat.MREC )
         {
-            return BannerAdSize.VUNGLE_MREC;
+            return BannerAdSize.getVUNGLE_MREC();
         }
         else
         {
