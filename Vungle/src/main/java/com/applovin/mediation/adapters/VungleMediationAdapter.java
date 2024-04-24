@@ -432,32 +432,35 @@ public class VungleMediationAdapter
         return AppLovinSdkUtils.pxToDp( context, deviceWidthPx );
     }
 
-    private static int getDeviceHeightInDp(Context var0, int var1) {
-        if (var0 == null) {
+    private static int getDeviceHeightInDp(Context context, int orientation) {
+        if (context == null) {
             return -1;
         } else {
-            if (var0.getApplicationContext() != null) {
-                var0 = var0.getApplicationContext();
+            if (context.getApplicationContext() != null) {
+                context = context.getApplicationContext();
             }
 
-            Resources var3 = var0.getResources();
-            if (var3 == null) {
+            Resources resource = context.getResources();
+            if (resource == null) {
                 return -1;
             } else {
-                DisplayMetrics var2 = var3.getDisplayMetrics();
-                if (var2 == null) {
+                DisplayMetrics displayMetrics = resource.getDisplayMetrics();
+                if (displayMetrics == null) {
                     return -1;
                 } else {
-                    Configuration var4 = var3.getConfiguration();
-                    if (var4 == null) {
+                    Configuration configuration = resource.getConfiguration();
+                    if (configuration == null) {
                         return -1;
                     } else {
-                        int var5 = var4.orientation;
-                        if (var1 == 0) {
-                            var1 = var5;
+                        int curOrientation = configuration.orientation;
+                        if (orientation == 0) {
+                            orientation = curOrientation;
                         }
 
-                        return var1 == var5 ? Math.round((float)var2.heightPixels / var2.density) : Math.round((float)var2.widthPixels / var2.density);
+                        return orientation == curOrientation ? Math.round(
+                            (float) displayMetrics.heightPixels / displayMetrics.density )
+                            : Math.round(
+                                (float) displayMetrics.widthPixels / displayMetrics.density );
                     }
                 }
             }
