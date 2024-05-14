@@ -490,7 +490,7 @@ public class VungleMediationAdapter
             }
 
             height = Math.max(Math.min(height, minHeight), 50);
-            return BannerAdSize.getInlineAdaptiveBannerAdSize(width, height);
+            return BannerAdSize.getInlineAdaptiveBannerAdSize(width, 300);
         }
     }
 
@@ -627,8 +627,15 @@ public class VungleMediationAdapter
 
         if ( TextUtils.isEmpty( creativeId ) ) return null;
 
-        Bundle extraInfo = new Bundle( 1 );
+        Bundle extraInfo = new Bundle( 3 );
         extraInfo.putString( "creative_id", creativeId );
+
+//        AdSize adSize = adView.getAdSize();
+//        if ( adSize != null )
+//        {
+            extraInfo.putInt( "ad_width", 400 /*adSize.getWidth() */);
+            extraInfo.putInt( "ad_height", 300 /*adSize.getHeight()*/ );
+//        }
 
         return extraInfo;
     }
