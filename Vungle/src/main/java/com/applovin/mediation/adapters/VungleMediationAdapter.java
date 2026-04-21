@@ -49,8 +49,8 @@ import com.vungle.ads.VungleAdSize;
 import com.vungle.ads.VungleAds;
 import com.vungle.ads.VungleBannerView;
 import com.vungle.ads.VungleError;
+import com.vungle.ads.VungleMediationLogger;
 import com.vungle.ads.VunglePrivacySettings;
-import com.vungle.ads.VungleWrapperFramework;
 import com.vungle.ads.internal.protos.Sdk.SDKError.Reason;
 import com.vungle.ads.internal.ui.view.MediaView;
 
@@ -89,7 +89,7 @@ public class VungleMediationAdapter
 
             initializationStatus = InitializationStatus.INITIALIZING;
 
-            VungleAds.setIntegrationName( VungleWrapperFramework.max, getAdapterVersion() );
+            VungleAds.setIntegrationName( "max", getAdapterVersion() );
 
             // Note: Vungle requires the Application Context
             VungleAds.init( getContext( activity ), appId, new InitializationListener()
@@ -226,18 +226,17 @@ public class VungleMediationAdapter
     @Override
     public void showInterstitialAd(final MaxAdapterResponseParameters parameters, @Nullable final Activity activity, final MaxInterstitialAdapterListener listener)
     {
-        if ( interstitialAd != null && interstitialAd.canPlayAd() )
+        if ( interstitialAd == null )
         {
-            log( "Showing interstitial ad for placement: " + parameters.getThirdPartyAdPlacementId() + "..." );
-            interstitialAd.play( getContext( activity ) );
-        }
-        else
-        {
-            log( "Interstitial ad is not ready: " + parameters.getThirdPartyAdPlacementId() + "..." );
+            VungleMediationLogger.logError( null, "Interstitial ad instance is null: " + parameters.getThirdPartyAdPlacementId() );
             listener.onInterstitialAdDisplayFailed( new MaxAdapterError( MaxAdapterError.AD_DISPLAY_FAILED,
-                                                                         MaxAdapterError.AD_NOT_READY.getCode(),
-                                                                         MaxAdapterError.AD_NOT_READY.getMessage() ) );
+                                                                          MaxAdapterError.AD_NOT_READY.getCode(),
+                                                                          MaxAdapterError.AD_NOT_READY.getMessage() ) );
+            return;
         }
+
+        log("Showing interstitial ad for placement: " + parameters.getThirdPartyAdPlacementId() + "...");
+        interstitialAd.play(getContext(activity));
     }
 
     //endregion
@@ -269,18 +268,17 @@ public class VungleMediationAdapter
 
     public void showAppOpenAd(@NonNull final MaxAdapterResponseParameters parameters, @Nullable final Activity activity, @NonNull final MaxAppOpenAdapterListener listener)
     {
-        if ( appOpenAd != null && appOpenAd.canPlayAd() )
+        if ( appOpenAd == null )
         {
-            log( "Showing app open ad for placement: " + parameters.getThirdPartyAdPlacementId() + "..." );
-            appOpenAd.play( getContext( activity ) );
-        }
-        else
-        {
-            log( "App open ad is not ready: " + parameters.getThirdPartyAdPlacementId() + "..." );
+            VungleMediationLogger.logError( null, "App open ad instance is null: " + parameters.getThirdPartyAdPlacementId() );
             listener.onAppOpenAdDisplayFailed( new MaxAdapterError( MaxAdapterError.AD_DISPLAY_FAILED,
-                                                                    MaxAdapterError.AD_NOT_READY.getCode(),
-                                                                    MaxAdapterError.AD_NOT_READY.getMessage() ) );
+                                                                     MaxAdapterError.AD_NOT_READY.getCode(),
+                                                                     MaxAdapterError.AD_NOT_READY.getMessage() ) );
+            return;
         }
+
+        log("Showing app open ad for placement: " + parameters.getThirdPartyAdPlacementId() + "...");
+        appOpenAd.play(getContext(activity));
     }
 
     //endregion
@@ -314,20 +312,18 @@ public class VungleMediationAdapter
     @Override
     public void showRewardedAd(final MaxAdapterResponseParameters parameters, @Nullable final Activity activity, final MaxRewardedAdapterListener listener)
     {
-        if ( rewardedAd != null && rewardedAd.canPlayAd() )
+        if ( rewardedAd == null )
         {
-            log( "Showing rewarded ad for placement: " + parameters.getThirdPartyAdPlacementId() + "..." );
-
-            configureReward( parameters );
-            rewardedAd.play( getContext( activity ) );
-        }
-        else
-        {
-            log( "Rewarded ad is not ready: " + parameters.getThirdPartyAdPlacementId() + "..." );
+            VungleMediationLogger.logError( null, "Rewarded ad instance is null: " + parameters.getThirdPartyAdPlacementId() );
             listener.onRewardedAdDisplayFailed( new MaxAdapterError( MaxAdapterError.AD_DISPLAY_FAILED,
-                                                                     MaxAdapterError.AD_NOT_READY.getCode(),
-                                                                     MaxAdapterError.AD_NOT_READY.getMessage() ) );
+                                                                      MaxAdapterError.AD_NOT_READY.getCode(),
+                                                                      MaxAdapterError.AD_NOT_READY.getMessage() ) );
+            return;
         }
+
+        log("Showing rewarded ad for placement: " + parameters.getThirdPartyAdPlacementId() + "...");
+        configureReward(parameters);
+        rewardedAd.play(getContext(activity));
     }
 
     //endregion
@@ -1195,19 +1191,15 @@ public class VungleMediationAdapter
             final NativeAd nativeAd = VungleMediationAdapter.this.nativeAd;
             if ( nativeAd == null )
             {
+                VungleMediationLogger.logError( null, "native ad instance is null." ); // add placement ID
                 e( "Failed to register native ad views: native ad is null." );
-                return false;
-            }
-
-            if ( !nativeAd.canPlayAd() )
-            {
-                e( "Failed to play native ad or native ad is registered." );
                 return false;
             }
 
             View mediaView = getMediaView();
             if ( mediaView == null )
             {
+                VungleMediationLogger.logError( null, "mediaView is null." );
                 e( "Failed to register native ad views: mediaView is null." );
                 return false;
             }
