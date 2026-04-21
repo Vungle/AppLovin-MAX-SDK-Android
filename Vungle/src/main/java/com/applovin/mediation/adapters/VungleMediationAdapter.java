@@ -933,6 +933,7 @@ public class VungleMediationAdapter
             {
                 log( "Native " + adFormat.getLabel() + " ad failed to load: no fill" );
                 listener.onAdViewAdLoadFailed( MaxAdapterError.NO_FILL );
+                VungleMediationLogger.logError( ad, "nativeAdObjectMismatch" );
 
                 return;
             }
@@ -1052,6 +1053,7 @@ public class VungleMediationAdapter
             {
                 log( "Native ad failed to load: no fill" );
                 listener.onNativeAdLoadFailed( MaxAdapterError.NO_FILL );
+                VungleMediationLogger.logError( ad, "nativeAdObjectMismatch" );
 
                 return;
             }
@@ -1062,6 +1064,7 @@ public class VungleMediationAdapter
             {
                 e( "Native ad (" + nativeAd + ") does not have required assets." );
                 listener.onNativeAdLoadFailed( MaxAdapterError.MISSING_REQUIRED_NATIVE_AD_ASSETS );
+                VungleMediationLogger.logError( ad, "missingRequiredNativeAdAssets" );
 
                 return;
             }
