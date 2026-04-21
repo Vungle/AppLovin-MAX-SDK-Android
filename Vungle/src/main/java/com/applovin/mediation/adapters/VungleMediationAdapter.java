@@ -562,6 +562,10 @@ public class VungleMediationAdapter
                 break;
         }
 
+        if (adapterError == MaxAdapterError.UNSPECIFIED) {
+            VungleMediationLogger.logError( null, "unspecifiedErrorCode:" +  vungleErrorCode);
+        }
+
         return new MaxAdapterError( adapterError, vungleErrorCode, vungleError.getLocalizedMessage() );
     }
 
@@ -1146,7 +1150,7 @@ public class VungleMediationAdapter
             final NativeAd nativeAd = VungleMediationAdapter.this.nativeAd;
             if ( nativeAd == null )
             {
-                VungleMediationLogger.logError( null, "native ad instance is null." ); // add placement ID
+                VungleMediationLogger.logError( null, "native ad instance is null." );
                 e( "Failed to register native ad views: native ad is null." );
                 return false;
             }
