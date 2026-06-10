@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.9.0.0
+* Certified with BigoAds SDK 5.9.0.
+
+## 5.8.2.0
+* Certified with BigoAds SDK 5.8.2.
+
+## 5.8.1.0
+* Certified with BigoAds SDK 5.8.1.
+
 ## 5.8.0.0
 * Certified with BigoAds SDK 5.8.0.
 

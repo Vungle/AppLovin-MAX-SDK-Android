@@ -65,6 +65,14 @@ public class VungleMediationAdapter
         extends MediationAdapterBase
         implements MaxSignalProvider, MaxInterstitialAdapter, /* MaxAppOpenAdapter */ MaxRewardedAdapter, MaxAdViewAdapter /* MaxNativeAdAdapter */
 {
+    private static final String ADAPTER_AD_FORMAT_INTERSTITIAL     = "MaxInterstitialAdapter";
+    private static final String ADAPTER_AD_FORMAT_APP_OPEN         = "MaxAppOpenAdapter";
+    private static final String ADAPTER_AD_FORMAT_REWARDED         = "MaxRewardedAdapter";
+    private static final String ADAPTER_AD_FORMAT_AD_VIEW          = "MaxAdViewAdapter";
+    private static final String ADAPTER_AD_FORMAT_AD_VIEW_ADAPTIVE = "MaxAdViewAdapter-adaptive";
+    private static final String ADAPTER_AD_FORMAT_NATIVE           = "MaxNativeAdAdapter";
+    private static final String ADAPTER_AD_FORMAT_NATIVE_BANNER    = "MaxNativeAdAdapter-banner";
+
     private static final AtomicBoolean        initialized = new AtomicBoolean();
     private static       InitializationStatus initializationStatus;
 
@@ -211,6 +219,7 @@ public class VungleMediationAdapter
 
         interstitialAd = new InterstitialAd( getContext( activity ), placementId, new AdConfig() );
         interstitialAd.setAdListener( new InterstitialListener( listener ) );
+        interstitialAd.setAdapterAdFormat( ADAPTER_AD_FORMAT_INTERSTITIAL );
 
         interstitialAd.load( bidResponse );
     }
@@ -246,6 +255,7 @@ public class VungleMediationAdapter
 
         appOpenAd = new InterstitialAd( getContext( activity ), placementId, new AdConfig() );
         appOpenAd.setAdListener( new AppOpenAdListener( listener ) );
+        appOpenAd.setAdapterAdFormat( ADAPTER_AD_FORMAT_APP_OPEN );
 
         appOpenAd.load( bidResponse );
     }
@@ -281,6 +291,7 @@ public class VungleMediationAdapter
 
         rewardedAd = new RewardedAd( getContext( activity ), placementId, new AdConfig() );
         rewardedAd.setAdListener( new RewardedListener( listener ) );
+        rewardedAd.setAdapterAdFormat( ADAPTER_AD_FORMAT_REWARDED );
 
         rewardedAd.load( bidResponse );
     }
@@ -326,6 +337,7 @@ public class VungleMediationAdapter
             final NativeAdViewListener nativeAdViewListener = new NativeAdViewListener( parameters, adFormat, context, listener );
             nativeAd = new NativeAd( getContext( activity ), placementId );
             nativeAd.setAdListener( nativeAdViewListener );
+            nativeAd.setAdapterAdFormat( ADAPTER_AD_FORMAT_NATIVE_BANNER );
 
             nativeAd.load( bidResponse );
 
@@ -333,16 +345,30 @@ public class VungleMediationAdapter
         }
 
         // Check if adaptive ad view sizes should be used
-        boolean isAdaptiveAdViewEnabled = isAdaptiveAdViewEnabled( parameters );
-        if ( isAdaptiveAdViewEnabled && AppLovinSdk.VERSION_CODE < 13_02_00_99 )
+        boolean isAdaptiveAdViewEnabled = parameters.getServerParameters().getBoolean( "adaptive_banner", false );
+        boolean shouldLogSizeMismatch = false;
+        if ( isAdaptiveAdViewEnabled && !VungleAds.isInline( placementId ) )
         {
+            userError( "Please use a Vungle inline placement ID in order to use Vungle adaptive ads" );
             isAdaptiveAdViewEnabled = false;
+            shouldLogSizeMismatch = true;
+        }
+        else if ( isAdaptiveAdViewEnabled && AppLovinSdk.VERSION_CODE < 13_02_00_99 )
+        {
             userError( "Please update AppLovin MAX SDK to version 13.2.0 or higher in order to use Vungle adaptive ads" );
+            isAdaptiveAdViewEnabled = false;
         }
 
         VungleAdSize adSize = toVungleAdSize( adFormat, isAdaptiveAdViewEnabled, parameters, context );
         adViewAd = new VungleBannerView( context, placementId, adSize );
         adViewAd.setAdListener( new AdViewAdListener( adFormatLabel, listener ) );
+        adViewAd.setAdapterAdFormat( isAdaptiveAdViewEnabled ? ADAPTER_AD_FORMAT_AD_VIEW_ADAPTIVE : ADAPTER_AD_FORMAT_AD_VIEW );
+
+        if ( shouldLogSizeMismatch )
+        {
+            // Log a size mismatch error since the ad unit is configured for adaptive but the placement is not inline
+            logAdaptiveSizeMismatch( parameters, adViewAd, context );
+        }
 
         adViewAd.load( bidResponse );
     }
@@ -363,6 +389,7 @@ public class VungleMediationAdapter
 
         nativeAd = new NativeAd( getContext( activity ), placementId );
         nativeAd.setAdListener( new NativeListener( parameters, getContext( activity ), listener ) );
+        nativeAd.setAdapterAdFormat( ADAPTER_AD_FORMAT_NATIVE );
 
         nativeAd.load( bidResponse );
     }
@@ -371,19 +398,18 @@ public class VungleMediationAdapter
 
     //region Helper Methods
 
-    private boolean isAdaptiveAdViewEnabled(final MaxAdapterResponseParameters parameters)
+    private boolean shouldFailAdLoadWhenSdkNotInitialized(final MaxAdapterResponseParameters parameters)
     {
-        if ( !parameters.getServerParameters().getBoolean( "adaptive_banner", false ) ) return false;
+        return parameters.getServerParameters().getBoolean( "fail_ad_load_when_sdk_not_initialized", true );
+    }
 
-        if ( VungleAds.isInline( parameters.getThirdPartyAdPlacementId() ) )
-        {
-            return true;
-        }
-        else
-        {
-            userError( "Please use a Vungle inline placement ID in order to use Vungle adaptive ads" );
-            return false;
-        }
+    private void logAdaptiveSizeMismatch(final MaxAdapterParameters parameters, final VungleBannerView adViewAd, final Context context)
+    {
+        final int adaptiveAdWidth = getAdaptiveAdViewWidth( parameters, context );
+        final int adaptiveAdMaxHeight = getInlineAdaptiveAdViewMaximumHeight( parameters );
+        final String message = "AdaptiveBannerSizeMismatch:w-" + adaptiveAdWidth + "|maxh-" + adaptiveAdMaxHeight;
+
+        VungleMediationLogger.logError( adViewAd, message );
     }
 
     private void updateUserPrivacySettings(final MaxAdapterParameters parameters)
